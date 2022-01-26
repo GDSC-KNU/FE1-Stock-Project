@@ -1,8 +1,33 @@
 import React from 'react';
 import SearchItem from './component/SearchItem';
+import { Link } from 'react-router-dom';
 import './styles/SearchListStyle.scss';
 
 const companies = [
+	{
+		name: 'Apple Inc. (APPL)',
+		stockPrice: '172.19',
+		revisedPrice: '-3.34',
+		percent: '-1.41',
+	},
+	{
+		name: 'Maui Land & Pinea... (MLP)',
+		stockPrice: '10.08',
+		revisedPrice: '0.08',
+		percent: '+0.79',
+	},
+	{
+		name: 'Apple Hospitality... (APLE)',
+		stockPrice: '172.19',
+		revisedPrice: '0.12',
+		percent: '+0.72',
+	},
+	{
+		name: 'GCP Applied Tech... (GCP)',
+		stockPrice: '31.87',
+		revisedPrice: '-0.08',
+		percent: '-0.25',
+	},
 	{
 		name: 'Apple Inc. (APPL)',
 		stockPrice: '172.19',
@@ -41,15 +66,17 @@ const SearchList = () => {
 					</div>
 				</div>
 				<div>
-					{companies.map((company, index) => (
-						<SearchItem
-							index={index}
-							name={company.name}
-							stockPrice={company.stockPrice}
-							revisedPrice={company.revisedPrice}
-							percent={company.percent}
-						/>
-					))}
+					<Link to="/company">
+						{companies.map((company, index) => (
+							<SearchItem
+								index={index}
+								name={company.name}
+								stockPrice={company.stockPrice}
+								revisedPrice={company.revisedPrice}
+								percent={company.percent}
+							/>
+						))}
+					</Link>
 				</div>
 			</div>
 		</div>
