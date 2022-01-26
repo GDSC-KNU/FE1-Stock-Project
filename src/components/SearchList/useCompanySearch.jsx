@@ -7,15 +7,19 @@ const useCompanySearch = (queryName, limitNumber) => {
 		axios({
 			method: 'GET',
 			url: BASE_URL + search,
-			parmas: {
+			params: {
 				query: queryName,
 				limit: limitNumber,
 				exchange: 'NASDAQ',
-				apiKey: process.env.REACT_APP_STOCK_API_KEY,
+				apikey: process.env.REACT_APP_STOCK_API_KEY,
 			},
-		}).then(res => {
-			console.log(res.data);
-		});
+		})
+			.then(res => {
+				console.log(res.data);
+			})
+			.catch(e => {
+				console.log(e);
+			});
 	}, [queryName, limitNumber]);
 
 	return null;
