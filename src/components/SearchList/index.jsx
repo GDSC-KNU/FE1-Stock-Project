@@ -1,4 +1,5 @@
 import React from 'react';
+import SearchItem from './component/SearchItem';
 import './styles/SearchListStyle.scss';
 
 const companies = [
@@ -29,35 +30,6 @@ const companies = [
 ];
 
 const SearchList = () => {
-	const searchList = companies.map((company, index) => (
-		<div className="search-item shadow-box">
-			<div className="number shadow-box">
-				<h1>{index + 1}</h1>
-			</div>
-			<div className="company-name">{company.name}</div>
-			<div className="stock-numbers">
-				<div className="stock-price">$ {company.stockPrice}</div>
-				<div className="search-price">
-					<div className="revised-price">
-						{company.revisedPrice > 0 ? (
-							<div className="up">
-								<span>▲</span>
-								<div className="percent">{company.percent}%</div>
-								{company.revisedPrice}
-							</div>
-						) : (
-							<div className="down">
-								<span>▼</span>
-								<div className="percent">{company.percent}%</div>
-								{company.revisedPrice}
-							</div>
-						)}
-					</div>
-				</div>
-			</div>
-		</div>
-	));
-
 	return (
 		<div className="wrapper">
 			<div className="contents">
@@ -68,7 +40,17 @@ const SearchList = () => {
 						<span> 건</span>
 					</div>
 				</div>
-				<div>{searchList}</div>
+				<div>
+					{companies.map((company, index) => (
+						<SearchItem
+							index={index}
+							name={company.name}
+							stockPrice={company.stockPrice}
+							revisedPrice={company.revisedPrice}
+							percent={company.percent}
+						/>
+					))}
+				</div>
 			</div>
 		</div>
 	);
