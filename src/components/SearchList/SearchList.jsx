@@ -56,7 +56,7 @@ const companies = [
 
 const SearchList = () => {
 	return (
-		<div className="wrapper">
+		<div className="search-wrapper">
 			<div className="contents">
 				<div className="search-result shadow-box">
 					<div className="search-num-text">
@@ -66,7 +66,7 @@ const SearchList = () => {
 					</div>
 				</div>
 				<div>
-					<Link to="/company">
+					<Link to="/detail">
 						{companies.map((company, index) => (
 							<SearchItem
 								index={index}
