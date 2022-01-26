@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { BASE_URL, search } from '../../lib/Api';
+import { BASE_URL, search } from '../../../lib/Api';
 
 const useCompanySearch = (queryName, limitNumber) => {
 	useEffect(() => {
