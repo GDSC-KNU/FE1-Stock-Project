@@ -36,19 +36,19 @@ const companiesList = [
 ];
 
 const SearchList = () => {
-	const [queryName, setQueryName] = useState('AA');
+	const [queryName, setQueryName] = useState('Goo');
 	const [limitNumber, setLimitNumber] = useState(10);
 	const [loading, setLoading] = useState(true);
 
 	const [companies, setCompanies] = useState([]);
 
 	useEffect(() => {
-		setQueryName('AA');
+		//setQueryName('APPLE');
 		setLimitNumber(10);
 	}, []);
 
 	useCompanySearch(queryName, limitNumber, setCompanies, setLoading);
-	console.log(companies);
+	//console.log(companies);
 	return (
 		<div className="search-wrapper">
 			<div className="contents">
@@ -56,7 +56,7 @@ const SearchList = () => {
 					<div className="search-num-text">
 						{loading === true ? null : (
 							<>
-								<span>{queryName} 검색 결과 </span>
+								<span>'{queryName}' 검색 결과 </span>
 								<span className="search-num">{companies.length}</span>
 								<span> 건</span>
 							</>
@@ -74,11 +74,11 @@ const SearchList = () => {
 							<SearchItem
 								key={index}
 								index={index}
-								name={company.name}
+								name={company.companyName}
 								symbol={company.symbol}
-								stockPrice={company.stockPrice}
-								revisedPrice={company.revisedPrice}
-								percent={company.percent}
+								stockPrice={company.price}
+								revisedPrice={company.changes}
+								percent={0}
 							/>
 						))}
 					</Link>

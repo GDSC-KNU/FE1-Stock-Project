@@ -1,31 +1,33 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import axios from 'axios';
-import { BASE_URL, search } from '../../../lib/Api';
+import { BASE_URL, search, profile } from '../../../lib/Api';
 
 const useCompanySearch = (queryName, limitNumber, setCompanies, setLoading) => {
 	const getCompany = async () => {
-		await axios({
-			method: 'GET',
-			url: BASE_URL + search,
-			params: {
-				query: queryName,
-				// limit: limitNumber,
-				exchange: 'NASDAQ',
-				apikey: process.env.REACT_APP_STOCK_API_KEY,
-			},
-		})
-			.then(res => {
-				console.log(res.data);
-				setCompanies(res.data);
-				setLoading(false);
-			})
-			.catch(e => {
-				console.log(e);
-			});
+		const res = await axios.get(BASE_URL + search, {
+			params: { query: queryName, exchange: 'NASDAQ', apikey: process.env.REACT_APP_STOCK_API_KEY },
+		});
+		console.log(res.data);
+		return res.data[0].symbol;
+	};
+
+	const getCompanyPrice = async symbol => {
+		const res = await axios.get(BASE_URL + profile + '/' + symbol, {
+			params: { apikey: process.env.REACT_APP_STOCK_API_KEY },
+		});
+		console.log(res.data);
+		setCompanies(res.data);
+		setLoading(false);
 	};
 
 	useEffect(() => {
-		getCompany();
+		const getSearchList = async () => {
+			const symbol = await getCompany();
+			console.log('symbol: ', symbol);
+			getCompanyPrice(symbol);
+		};
+
+		getSearchList();
 	}, [queryName, limitNumber]);
 
 	return null;
