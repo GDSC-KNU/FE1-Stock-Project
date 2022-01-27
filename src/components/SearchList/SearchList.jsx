@@ -39,26 +39,30 @@ const SearchList = () => {
 	const [queryName, setQueryName] = useState('AA');
 	const [limitNumber, setLimitNumber] = useState(10);
 
+	const [companies, setCompanies] = useState([]);
+
 	useEffect(() => {
 		setQueryName('AA');
 		setLimitNumber(10);
 	}, []);
 
-	useCompanySearch(queryName, limitNumber);
+	useCompanySearch(queryName, limitNumber, setCompanies);
+	console.log(companies);
 	return (
 		<div className="search-wrapper">
 			<div className="contents">
 				<div className="search-result shadow-box">
 					<div className="search-num-text">
-						<span>'APPLE' 검색 결과 </span>
-						<span className="search-num">{companiesList.length}</span>
+						<span>{queryName} 검색 결과 </span>
+						<span className="search-num">{companies.length}</span>
 						<span> 건</span>
 					</div>
 				</div>
 				<div>
 					<Link to="/detail">
-						{companiesList.map((company, index) => (
+						{companies.map((company, index) => (
 							<SearchItem
+								key={index}
 								index={index}
 								name={company.name}
 								symbol={company.symbol}

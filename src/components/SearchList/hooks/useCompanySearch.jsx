@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { BASE_URL, search } from '../../../lib/Api';
 
-const useCompanySearch = (queryName, limitNumber) => {
-	useEffect(() => {
-		axios({
+const useCompanySearch = (queryName, limitNumber, setCompanies) => {
+	const getCompany = async () => {
+		await axios({
 			method: 'GET',
 			url: BASE_URL + search,
 			params: {
@@ -16,10 +16,15 @@ const useCompanySearch = (queryName, limitNumber) => {
 		})
 			.then(res => {
 				console.log(res.data);
+				setCompanies(res.data);
 			})
 			.catch(e => {
 				console.log(e);
 			});
+	};
+
+	useEffect(() => {
+		getCompany();
 	}, [queryName, limitNumber]);
 
 	return null;
