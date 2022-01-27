@@ -1,6 +1,6 @@
 import React from 'react';
 import { ReactComponent as TitleIcon } from 'assets/icons/company-title-icon.svg';
-import StockChart from './StockChart';
+import StockChartContainer from './StockChartContainer';
 import './css/Company.scss';
 
 const CompanyPresenter = ({ profile, quote }) => {
@@ -29,7 +29,7 @@ const CompanyPresenter = ({ profile, quote }) => {
 							</div>
 						</div>
 					</div>
-					<StockChart />
+					<StockChartContainer />
 				</div>
 				<div className="vertical-line" />
 				<div className="summary-box">
