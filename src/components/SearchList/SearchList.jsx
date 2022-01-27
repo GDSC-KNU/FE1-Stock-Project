@@ -38,6 +38,7 @@ const companiesList = [
 const SearchList = () => {
 	const [queryName, setQueryName] = useState('AA');
 	const [limitNumber, setLimitNumber] = useState(10);
+	const [loading, setLoading] = useState(true);
 
 	const [companies, setCompanies] = useState([]);
 
@@ -46,19 +47,28 @@ const SearchList = () => {
 		setLimitNumber(10);
 	}, []);
 
-	useCompanySearch(queryName, limitNumber, setCompanies);
+	useCompanySearch(queryName, limitNumber, setCompanies, setLoading);
 	console.log(companies);
 	return (
 		<div className="search-wrapper">
 			<div className="contents">
 				<div className="search-result shadow-box">
 					<div className="search-num-text">
-						<span>{queryName} 검색 결과 </span>
-						<span className="search-num">{companies.length}</span>
-						<span> 건</span>
+						{loading === true ? null : (
+							<>
+								<span>{queryName} 검색 결과 </span>
+								<span className="search-num">{companies.length}</span>
+								<span> 건</span>
+							</>
+						)}
 					</div>
 				</div>
-				<div>
+
+				{loading === true ? (
+					<div className="loading">
+						<span>Loading...</span>
+					</div>
+				) : (
 					<Link to="/detail">
 						{companies.map((company, index) => (
 							<SearchItem
@@ -72,7 +82,7 @@ const SearchList = () => {
 							/>
 						))}
 					</Link>
-				</div>
+				)}
 			</div>
 		</div>
 	);

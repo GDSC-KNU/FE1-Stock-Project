@@ -16,6 +16,17 @@ a {
 	display: block;
 }
 
+.loading {
+	width: 100%;
+	height: 60vh;
+	font-size: 2rem;
+	font-weight: bold;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	color: #666666;
+}
+
 .search-result {
 	width: 45%;
 	height: 9vh;

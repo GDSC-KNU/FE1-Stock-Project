@@ -7,7 +7,7 @@ const SearchItem = ({ index, name, symbol, stockPrice, revisedPrice, percent }) 
 				<h1>{index + 1}</h1>
 			</div>
 			<div className="company-name">
-				{name} ({symbol})
+				{name.length > 25 ? `${name.slice(0, 25)}...` : name} ({symbol})
 			</div>
 			<div className="stock-numbers">
 				<div className="stock-price">$ {stockPrice}</div>

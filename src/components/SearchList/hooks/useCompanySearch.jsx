@@ -2,14 +2,14 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { BASE_URL, search } from '../../../lib/Api';
 
-const useCompanySearch = (queryName, limitNumber, setCompanies) => {
+const useCompanySearch = (queryName, limitNumber, setCompanies, setLoading) => {
 	const getCompany = async () => {
 		await axios({
 			method: 'GET',
 			url: BASE_URL + search,
 			params: {
 				query: queryName,
-				limit: limitNumber,
+				// limit: limitNumber,
 				exchange: 'NASDAQ',
 				apikey: process.env.REACT_APP_STOCK_API_KEY,
 			},
@@ -17,6 +17,7 @@ const useCompanySearch = (queryName, limitNumber, setCompanies) => {
 			.then(res => {
 				console.log(res.data);
 				setCompanies(res.data);
+				setLoading(false);
 			})
 			.catch(e => {
 				console.log(e);
