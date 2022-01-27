@@ -2,7 +2,6 @@ import React from 'react';
 import ReactApexChart from 'react-apexcharts';
 
 const StockChart = ({ option, series, chartChange }) => {
-	console.log('StockChart', series);
 	return (
 		<div className="graph">
 			<ul>

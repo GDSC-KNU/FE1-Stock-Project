@@ -4,21 +4,30 @@ import axios from 'axios';
 import { BASE_URL, STOCK_1M_URL, STOCK_30M_URL, STOCK_1H_URL, STOCK_1D_URL } from '../../lib/Api';
 
 const TICKER = 'AAPL';
-const STOCK_API_KEY = process.env.REACT_APP_STOCK_API_KEY;
 
 const StockChartContainer = () => {
-	const getStockHistory1M = async () => {
-		//가장 최근거에서 391개 가져옴, 1분마다 업데이트
-		console.log('getStockHistory1M');
-		try {
-			const response = await axios.get(
-				`${BASE_URL}${STOCK_1M_URL}/${TICKER}?apikey=${STOCK_API_KEY}`,
-			);
+	const TODAY = new Date();
+	const TODAY_STRING = `${TODAY.getFullYear()}-${(TODAY.getMonth() + 1)
+		.toString()
+		.padStart(2, '0')}-${(TODAY.getDate() - 1).toString().padStart(2, '0')}`;
 
-			const todayChart = response.data.slice(0, 391);
+	const getStockHistory1M = async () => {
+		try {
+			const response = await axios.get(`${BASE_URL}${STOCK_1M_URL}/${TICKER}`, {
+				params: {
+					from: TODAY_STRING,
+					to: TODAY_STRING,
+					apikey: process.env.REACT_APP_STOCK_API_KEY,
+				},
+			});
+
+			const todayChart = response.data.reverse();
 
 			const candleInfo = todayChart.map(({ date, open, low, high, close }) => ({
-				x: new Date(date),
+				x:
+					new Date(date).getHours().toString().padStart(2, '0') +
+					':' +
+					new Date(date).getMinutes().toString().padStart(2, '0'),
 				y: [open, high, low, close],
 			}));
 
@@ -35,14 +44,30 @@ const StockChartContainer = () => {
 	};
 
 	const getStockHistory30M = async () => {
+		const BEFORE_STRING = `${TODAY.getFullYear()}-${(TODAY.getMonth() + 1)
+			.toString()
+			.padStart(2, '0')}-${(TODAY.getDate() - 1 + 7).toString().padStart(2, '0')}`;
+
 		try {
-			const response = await axios.get(
-				`${BASE_URL}${STOCK_30M_URL}/${TICKER}?apikey=${STOCK_API_KEY}`,
-			);
-			const weekChart = response.data.slice(0, 70);
+			const response = await axios.get(`${BASE_URL}${STOCK_30M_URL}/${TICKER}`, {
+				params: {
+					from: BEFORE_STRING,
+					to: TODAY_STRING,
+					apikey: process.env.REACT_APP_STOCK_API_KEY,
+				},
+			});
+
+			const weekChart = response.data.slice(0, 70).reverse();
 
 			const candleInfo = weekChart.map(({ date, open, low, high, close }) => ({
-				x: new Date(date),
+				x:
+					(new Date(date).getMonth() + 1).toString() +
+					'/' +
+					new Date(date).getDate().toString() +
+					' ' +
+					new Date(date).getHours().toString().padStart(2, '0') +
+					':' +
+					new Date(date).getMinutes().toString().padStart(2, '0'),
 				y: [open, high, low, close],
 			}));
 
@@ -59,16 +84,31 @@ const StockChartContainer = () => {
 	};
 
 	const getStockHistory1H = async () => {
+		const BEFORE_STRING = `${TODAY.getFullYear()}-${
+			TODAY.getMonth() != 0 ? TODAY.getMonth().toString().padStart(2, '0') : 12
+		}-${(TODAY.getDate() - 1).toString().padStart(2, '0')}`;
+
 		try {
-			const response = await axios.get(
-				`${BASE_URL}${STOCK_1H_URL}/${TICKER}?apikey=${STOCK_API_KEY}`,
-			);
+			const response = await axios.get(`${BASE_URL}${STOCK_1H_URL}/${TICKER}`, {
+				params: {
+					from: BEFORE_STRING,
+					to: TODAY_STRING,
+					apikey: process.env.REACT_APP_STOCK_API_KEY,
+				},
+			});
 
-			const weekChart = response.data.slice(0, 161);
-			console.log(weekChart);
+			const monthChart = response.data.reverse();
 
-			const candleInfo = weekChart.map(({ date, open, low, high, close }) => ({
-				x: new Date(date),
+			const candleInfo = monthChart.map(({ date, open, low, high, close }) => ({
+				x:
+					(new Date(date).getMonth() + 1).toString() +
+					'/' +
+					new Date(date).getDate().toString() +
+					' ' +
+					new Date(date).getHours().toString().padStart(2, '0') +
+					':' +
+					new Date(date).getMinutes().toString().padStart(2, '0'),
+				y: [open, high, low, close],
 				y: [open, high, low, close],
 			}));
 
@@ -85,18 +125,23 @@ const StockChartContainer = () => {
 	};
 
 	const getStockHistory1D = async () => {
+		const BEFORE_STRING = `${TODAY.getFullYear() - 1}-${(TODAY.getMonth() + 1)
+			.toString()
+			.padStart(2, '0')}-${(TODAY.getDate() - 1).toString().padStart(2, '0')}`;
+
 		try {
-			const response = await axios.get(
-				`${BASE_URL}${STOCK_1D_URL}/${TICKER}?apikey=${STOCK_API_KEY}`,
-			);
+			const response = await axios.get(`${BASE_URL}${STOCK_1D_URL}/${TICKER}`, {
+				params: {
+					from: BEFORE_STRING,
+					to: TODAY_STRING,
+					apikey: process.env.REACT_APP_STOCK_API_KEY,
+				},
+			});
 
-			console.log('response', response.data.historical);
+			const yearChart = response.data.historical.reverse();
 
-			const weekChart = response.data.historical.slice(0, 365);
-			console.log(weekChart);
-
-			const candleInfo = weekChart.map(({ date, open, low, high, close }) => ({
-				x: new Date(date),
+			const candleInfo = yearChart.map(({ date, open, low, high, close }) => ({
+				x: (new Date(date).getMonth() + 1).toString() + '/' + new Date(date).getDate().toString(),
 				y: [open, high, low, close],
 			}));
 
@@ -114,11 +159,11 @@ const StockChartContainer = () => {
 
 	useEffect(() => {
 		getStockHistory1M();
-		// getStockHistory1H();
-		// getStockHistory1D();
+		setChartLoading(false);
 	}, []);
 
 	const [stockHistory, setStockHistory] = useState(getStockHistory1M);
+	const [chartLoading, setChartLoading] = useState(true);
 
 	const chartChange = event => {
 		switch (event.target.value) {
@@ -162,14 +207,10 @@ const StockChartContainer = () => {
 			},
 		},
 		xaxis: {
-			type: 'datetime',
+			type: 'category',
+			tickAmount: 5,
 			labels: {
-				datetimeFormatter: {
-					year: 'yyyy',
-					month: "MMM 'yy",
-					day: 'dd MMM',
-					hour: 'HH:mm',
-				},
+				rotate: 0,
 			},
 		},
 		yaxis: {
@@ -184,7 +225,15 @@ const StockChartContainer = () => {
 		},
 	};
 
-	return <StockChart option={candleOptions} series={stockHistory} chartChange={chartChange} />;
+	return (
+		<>
+			{chartLoading ? (
+				<div className="graph">now Loading...</div>
+			) : (
+				<StockChart option={candleOptions} series={stockHistory} chartChange={chartChange} />
+			)}
+		</>
+	);
 };
 
 export default StockChartContainer;
