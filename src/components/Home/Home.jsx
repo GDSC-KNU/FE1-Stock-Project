@@ -4,6 +4,7 @@ import trending from 'assets/icons/trending_up.svg';
 import fire from 'assets/icons/fire.svg';
 import ReactApexChart from 'react-apexcharts';
 import StockItem from './components/StockItem';
+import { Link } from 'react-router-dom';
 
 const chartOption = {
 	chart: {
@@ -131,7 +132,7 @@ const Home = ({
 								options={chartOption}
 								series={[
 									{
-										data: NASDAQHistory.historical.map(item => {
+										data: NASDAQHistory.map(item => {
 											return {
 												x: new Date(item.date),
 												y: [item.open, item.high, item.low, item.close],
@@ -154,16 +155,18 @@ const Home = ({
 							</div>
 						</div>
 						<div className="stock-list shadow-box">
-							{itemList.map(
+							{itemList?.map(
 								//NASDAQ100에서 itemList 으로 변경 필요
 								(item, idx) => (
-									<StockItem
-										key={idx}
-										idx={idx + 1}
-										code={item.symbol}
-										percentDelta={item.percentDelta}
-										price={item.price}
-									/>
+									<Link to={`/detail/${item.symbol}`}>
+										<StockItem
+											key={idx}
+											idx={idx + 1}
+											code={item.symbol}
+											// percentDelta={item.percentDelta}
+											// price={item.price}
+										/>
+									</Link>
 								),
 							)}
 							<div ref={setTarget} className="loader">

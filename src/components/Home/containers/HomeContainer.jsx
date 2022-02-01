@@ -1,5 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import axios from 'axios';
 import Home from '../Home';
+import {
+	BASE_URL,
+	historicalStockPrice,
+	nasdaq100,
+	nasdaqHistory,
+	nasdaqIndex,
+	stockPrice,
+} from 'lib/Api';
 
 const NASDAQDummy = [
 	{
@@ -300,36 +309,65 @@ const HomeContainer = () => {
 	const [buttonSelected, setButtonSelected] = useState(0);
 	const [NASDAQInfo, setNASDAQInfo] = useState([]);
 	const [NASDAQ100, setNASDAQ100] = useState([]);
-	const [NASDAQHistory, setNASDAQHistory] = useState({});
+	const [NASDAQHistory, setNASDAQHistory] = useState([]);
 	const [itemList, setItemList] = useState([]);
 
-	const getNASDAQInfo = () => {
-		setNASDAQInfo(NASDAQDummy);
+	const getNASDAQInfo = useCallback(async () => {
+		const response = await axios.get(
+			`${BASE_URL}${nasdaqIndex}?apikey=${process.env.REACT_APP_STOCK_API_KEY}`,
+		);
+		setNASDAQInfo(response.data);
+		// await new Promise(res => setTimeout(res, 500));
+		// setNASDAQInfo([2]);
+		console.log('getNASDAQInfo complete');
+	}, []);
+	const getNASDAQ100 = async () => {
+		const response = await axios.get(
+			`${BASE_URL}${nasdaq100}?apikey=${process.env.REACT_APP_STOCK_API_KEY}`,
+		);
+		setNASDAQ100(response.data);
 	};
-	const getNASDAQ100 = () => {
-		setNASDAQ100(NASDAQ100Dummy);
+	const getNASDAQHistory = async () => {
+		const historyList = ['1min', '5min', '15min', '30min', '1hour', '4hour'];
+		console.log(
+			`${BASE_URL}${nasdaqHistory[historyList[buttonSelected]]}?apikey=${
+				process.env.REACT_APP_STOCK_API_KEY
+			}`,
+		);
+		// setNASDAQHistory(priceHistoryDummy[0]);
+		const response = await axios.get(
+			`${BASE_URL}${nasdaqHistory[historyList[buttonSelected]]}?apikey=${
+				process.env.REACT_APP_STOCK_API_KEY
+			}`,
+		);
+		console.log('nasdaqhistroy', response.data);
+		setNASDAQHistory(response.data);
 	};
-	const getNASDAQHistory = () => {
-		setNASDAQHistory(NASDAQHistoryDummy);
+	const getPriceDelta = async code => {
+		const response = await axios.get(
+			`${BASE_URL}${historicalStockPrice}/${code}?apikey=${process.env.REACT_APP_STOCK_API_KEY}`,
+		);
+		return response.data.historical[0].changePercent;
+		// return priceHistoryDummy[0].historical[0].changePercent;
 	};
-	const getPriceDelta = code => {
-		return priceHistoryDummy[0].historical[0].changePercent;
-	};
-	const getCurrentPrice = code => {
-		return currentPriceDummy[0].price;
+	const getCurrentPrice = async code => {
+		const response = await axios.get(
+			`${BASE_URL}${stockPrice}/${code}?apikey=${process.env.REACT_APP_STOCK_API_KEY}`,
+		);
+		return response.data[0].price;
+		// return currentPriceDummy[0].price;
 	};
 
 	const getMoreItem = async () => {
 		if (itemList.length >= NASDAQ100.length || isListLoading) return;
-		console.log('itemList', itemList);
 		setIsListLoading(prev => !prev);
-		await new Promise(resolve => setTimeout(resolve, 1500));
+		await new Promise(resolve => setTimeout(resolve, 500));
 		NASDAQ100.slice(itemList.length, itemList.length + 5).map(item => {
 			setItemList(prev =>
 				prev.concat({
 					symbol: item.symbol,
-					percentDelta: getPriceDelta(item.symbol),
-					price: getCurrentPrice(item.symbol),
+					// percentDelta: await getPriceDelta(item.symbol),
+					// price: await getCurrentPrice(item.symbol),
 				}),
 			);
 		});
@@ -341,8 +379,17 @@ const HomeContainer = () => {
 		getNASDAQInfo();
 		getNASDAQ100();
 		getNASDAQHistory();
-		setIsChartLoading(false);
-	}, []);
+	}, [buttonSelected]);
+
+	useEffect(() => {
+		console.log('nasdaqinfo', NASDAQInfo);
+		console.log('nasdaq100', NASDAQ100);
+		console.log('nasdaqhistory', NASDAQHistory);
+		if (NASDAQInfo.length && NASDAQ100.length && NASDAQHistory) {
+			setIsChartLoading(false);
+			console.log('set to false');
+		}
+	}, [NASDAQInfo, NASDAQ100, NASDAQHistory]);
 
 	return (
 		<Home
