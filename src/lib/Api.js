@@ -10,6 +10,6 @@ export const STOCK_1M_URL = '/v3/historical-chart/1min';
 
 export const STOCK_30M_URL = '/v3/historical-chart/30min';
 
-export const STOCK_1H_URL = '/v3/historical-chart/1hour';
+export const STOCK_4H_URL = '/v3/historical-chart/4hour';
 
 export const STOCK_1D_URL = '/v3/historical-price-full';

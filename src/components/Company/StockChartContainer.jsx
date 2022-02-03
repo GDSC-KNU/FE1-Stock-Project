@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import StockChart from './StockChart';
 import axios from 'axios';
-import { BASE_URL, STOCK_1M_URL, STOCK_30M_URL, STOCK_1H_URL, STOCK_1D_URL } from '../../lib/Api';
+import { BASE_URL, STOCK_1M_URL, STOCK_30M_URL, STOCK_4H_URL, STOCK_1D_URL } from '../../lib/Api';
 
 const TICKER = 'AAPL';
 
@@ -83,13 +83,13 @@ const StockChartContainer = () => {
 		}
 	};
 
-	const getStockHistory1H = async () => {
+	const getStockHistory4H = async () => {
 		const BEFORE_STRING = `${TODAY.getFullYear()}-${
 			TODAY.getMonth() != 0 ? TODAY.getMonth().toString().padStart(2, '0') : 12
 		}-${(TODAY.getDate() - 1).toString().padStart(2, '0')}`;
 
 		try {
-			const response = await axios.get(`${BASE_URL}${STOCK_1H_URL}/${TICKER}`, {
+			const response = await axios.get(`${BASE_URL}${STOCK_4H_URL}/${TICKER}`, {
 				params: {
 					from: BEFORE_STRING,
 					to: TODAY_STRING,
@@ -159,10 +159,9 @@ const StockChartContainer = () => {
 
 	useEffect(() => {
 		getStockHistory1M();
-		setChartLoading(false);
 	}, []);
 
-	const [stockHistory, setStockHistory] = useState(getStockHistory1M);
+	const [stockHistory, setStockHistory] = useState([]);
 	const [chartLoading, setChartLoading] = useState(true);
 
 	const chartChange = event => {
@@ -228,7 +227,7 @@ const StockChartContainer = () => {
 	return (
 		<>
 			{chartLoading ? (
-				<div className="graph">now Loading...</div>
+				<div className="graph">NOW LOADING</div>
 			) : (
 				<StockChart option={candleOptions} series={stockHistory} chartChange={chartChange} />
 			)}
