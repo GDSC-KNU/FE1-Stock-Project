@@ -12,7 +12,7 @@ const AppRouter = () => {
 			<Switch>
 				<Route path="/" exact component={HomeContainer} />
 				<Route path="/search-list" component={SearchList} />
-				<Route path="/detail" component={Company} />
+				<Route path="/detail/:TICKER" component={Company} />
 			</Switch>
 		</Router>
 	);

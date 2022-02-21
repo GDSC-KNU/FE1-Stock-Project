@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import StockChart from './StockChart';
 import axios from 'axios';
 import { BASE_URL, STOCK_1M_URL, STOCK_30M_URL, STOCK_4H_URL, STOCK_1D_URL } from '../../lib/Api';
 
-const TICKER = 'AAPL';
-
 const StockChartContainer = () => {
+	const { TICKER } = useParams();
 	const TODAY = new Date();
 	const TODAY_STRING = `${TODAY.getFullYear()}-${(TODAY.getMonth() + 1)
 		.toString()
@@ -38,6 +38,7 @@ const StockChartContainer = () => {
 			];
 
 			setStockHistory(candleSeries);
+			setChartLoading(false);
 		} catch (error) {
 			console.log(error);
 		}
@@ -78,6 +79,7 @@ const StockChartContainer = () => {
 			];
 
 			setStockHistory(candleSeries);
+			setChartLoading(false);
 		} catch (error) {
 			console.log(error);
 		}
@@ -119,6 +121,7 @@ const StockChartContainer = () => {
 			];
 
 			setStockHistory(candleSeries);
+			setChartLoading(false);
 		} catch (error) {
 			console.log(error);
 		}
@@ -152,6 +155,7 @@ const StockChartContainer = () => {
 			];
 
 			setStockHistory(candleSeries);
+			setChartLoading(false);
 		} catch (error) {
 			console.log(error);
 		}
@@ -173,7 +177,7 @@ const StockChartContainer = () => {
 				getStockHistory30M();
 				break;
 			case '1month':
-				getStockHistory1H();
+				getStockHistory4H();
 				break;
 			case '1year':
 				getStockHistory1D();
@@ -226,11 +230,7 @@ const StockChartContainer = () => {
 
 	return (
 		<>
-			{chartLoading ? (
-				<div className="graph">NOW LOADING</div>
-			) : (
-				<StockChart option={candleOptions} series={stockHistory} chartChange={chartChange} />
-			)}
+			<StockChart option={candleOptions} series={stockHistory} chartChange={chartChange} />
 		</>
 	);
 };

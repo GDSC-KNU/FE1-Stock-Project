@@ -19,7 +19,7 @@ const CompanyPresenter = ({ profile, quote }) => {
 							<div className="price">
 								{new Intl.NumberFormat('en-US', {
 									style: 'currency',
-									currency: profile.currency,
+									currency: 'USD',
 								}).format(quote.price)}
 							</div>
 							<div className={quote.change > 0 ? 'price-ratio-up' : 'price-ratio-down'}>
